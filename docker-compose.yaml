@@ -1,0 +1,33 @@
+version: '3.6'
+services:
+  sf-node:
+    image: 'functionland/sugarfunge-node:latest'
+    restart: always
+    network_mode: "host"
+    command: ["--pruning=archive", "--chain=./customSpecRaw.json", "--name=fula-docker", "--execution=wasm", "--port=30334", "--ws-port", "9944", "--ws-external", "--rpc-external", "--rpc-cors", "all", "--bootnodes", "/dns4/node.testnet.fx.land/tcp/30334/p2p/12D3KooWHEekCy1svmzieVQ6ZAC2G2gmCVfELm2jrFWCv8UTRtUM"]
+    volumes:
+      - ./data/fula-docker:/root/.local/share/sugarfunge-node/chains/live_testnet
+      - ./customSpecRaw.json:/customSpecRaw.json
+  sf-api:
+    image: 'functionland/sugarfunge-api:latest'
+    restart: always
+    network_mode: "host"
+    command: ["-l", "http://0.0.0.0:4000", "-s", "ws://127.0.0.1:9944"]
+  ipfs:
+    image: 'ipfs/go-ipfs:v0.13.0'
+    entrypoint: ["sh", "/scripts/ipfs-setup.sh"]
+    restart: always
+    ports:
+      - "4001:4001"
+      - "8001:8080"
+      - "5001:5001"
+    volumes:
+      - ./scripts/ipfs-setup.sh:/scripts/ipfs-setup.sh
+      - ./ipfs:/data/ipfs
+      - ./swarm.key:/data/ipfs/swarm.key
+  proof-engine:
+    image: 'functionland/proof-engine:latest'
+    restart: always
+    network_mode: "host"
+    environment:
+      RUST_LOG: 'warn,proof_engine=info'
