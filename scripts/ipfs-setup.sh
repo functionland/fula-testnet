@@ -24,6 +24,6 @@ user=ipfs
 }
 
 # Add the bootnode to peer with other nodes
-ipfs bootstrap add /dns4/ipfs.testnet.fx.land/tcp/4001/ipfs/12D3KooWJmJ4Wn8NkVqaqkatNqCXqYqitLKTp6ao7P1LRemJe8qP
+ipfs bootstrap add /dns4/ipfs.testnet.fx.land/tcp/4001/ipfs/12D3KooWBNonCBdf689W94wbBhvm39LGeoP5FZDNNh8j8qwy5M3B
 
 ipfs daemon --migrate=true --agent-version-suffix=docker
