@@ -36,7 +36,7 @@ $ docker compose down
 $ sudo rm -r data/ ipfs/
 ```
 
-## Running IPFS outside of docker compose
+## Running IPFS outside of docker compose (Optional)
 
 By default, the IPFS WebUI is disabled on private swarm networks since it fetches the app from the public network. There is a workaround by installing IPFS Desktop.
 
@@ -62,13 +62,7 @@ docker compose up -d
 
 ### Initial setup
 
-- The services uses an operator account to fund the IPFS account (Default: `//Alice`) and a pool id that manages the proofs (Default: `1000000`). It can be changed by editing the `command` line on the `proof-engine` service in the `docker-compose.yaml` file.
-
-```yaml
-    command: ["//Alice", "--pool-id", "1000000"]
-```
-
-- Once the service starts, it will create a `Chain Account` depending on your IPFS Peer ID. Wait a few minutes after the `docker-compose.yaml` starts the services so it can configure everything for you and get the account key by running on the same folder as the mentioned file.
+- Wait a few minutes after the `docker-compose.yaml` starts the services so it can configure everything for you and get the account key by running the following command on the same folder as the `docker-compose.yaml`.
 
 ```bash
 docker compose logs proof-engine | grep Account 
@@ -87,11 +81,16 @@ The IPFS Account Key in this case is `5HDndLhyKjfxSZHb9zz88pPN3RPmBpaaz8PFbgmKQZ
 
 ### Manifest
 
-- A manifest is required to confirm to the proof engine that a file was stored in your IPFS storage. You will need to do a `POST` request to `http://localhost:4000/fula/update_manifest`. The following example asumes that you use the default configuration with `//Alice` which is `5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY` as the operator. You will need to fill `(IPFS ACCOUNT KEY)` from the past step (it will be different for you) and `(CID OF A FILE STORED IN YOUR IPFS NODE)`.
+- A manifest is required to confirm to the proof engine that a file was stored in your IPFS storage. You will need to do a `POST` request to `http://localhost:4000/fula/update_manifest`.
+
+1. `seed`: The operator that is owner of the asset pool (Default: `//Alice`)
+2. `from`: The account key of the owner of the asset pool (Default: `5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY` which represents `//Alice`)
+3. `to:`: The IPFS Account key that contains the IPFS file stored. (In this example is `5HDndLhyKjfxSZHb9zz88pPN3RPmBpaaz8PFbgmKQZz5LJ7j` which is your own IFPS Account)
+4. `manifest`.`job`.`uri`: The CID of a file that is stored in the IPFS Account used in the `to` field.
 
 ```json
 {
-    "seed": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+    "seed": "//Alice",
     "from": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
     "to": "(IPFS ACCOUNT KEY)",
     "manifest": {
@@ -104,4 +103,6 @@ The IPFS Account Key in this case is `5HDndLhyKjfxSZHb9zz88pPN3RPmBpaaz8PFbgmKQZ
 }
 ```
 
-- After the manifest is configured you should see in the testnet explorer at https://explorer.testnet.fx.land/#/explorer that the IFPS Storage account is getting rewards. Another way is to check the logs of the proof engine service with `docker compose logs proof-engine logs` in the same folder as the `fula-testnet` repository.
+- After the manifest is added to the chain you should see in the testnet explorer at https://explorer.testnet.fx.land/#/explorer that the IFPS Storage account is getting rewards.
+
+- Another way is to check the logs of the proof engine service with `docker compose logs proof-engine logs` in the same folder as the `fula-testnet` repository, be aware that this will show the rewards being minted if the `to` field is your own IPFS Account Key that was created for your ipfs service.

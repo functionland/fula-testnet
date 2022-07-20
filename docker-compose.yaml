@@ -4,7 +4,7 @@ services:
     image: 'functionland/sugarfunge-node:latest'
     restart: always
     network_mode: "host"
-    command: ["--pruning=archive", "--chain=./customSpecRaw.json", "--name=fula-docker", "--execution=wasm", "--port=30334", "--ws-port", "9944", "--ws-external", "--rpc-external", "--rpc-cors", "all", "--bootnodes", "/dns4/node.testnet.fx.land/tcp/30334/p2p/12D3KooWSTgnbJ8EQVgMAtRceP6toynKSyaYWYS9uxV2ddDGrw3S"]
+    command: ["--pruning=archive", "--chain=./customSpecRaw.json", "--name=fula-docker", "--execution=wasm", "--port=30334", "--ws-port", "9944", "--ws-external", "--rpc-external", "--rpc-cors", "all", "--bootnodes", "/dns4/node.testnet.fx.land/tcp/30334/p2p/12D3KooWJWmLsCgqubfTLcscgJpovaZTWJD7c8XUXE8w4yYYUMwK"]
     volumes:
       - ./data/fula-docker:/root/.local/share/sugarfunge-node/chains/live_testnet
       - ./customSpecRaw.json:/customSpecRaw.json
@@ -29,6 +29,5 @@ services:
     image: 'functionland/proof-engine:latest'
     restart: always
     network_mode: "host"
-    command: ["//Alice", "--pool-id", "1000000"]
     environment:
       RUST_LOG: 'warn,proof_engine=info'
