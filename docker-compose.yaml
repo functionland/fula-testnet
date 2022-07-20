@@ -29,5 +29,6 @@ services:
     image: 'functionland/proof-engine:latest'
     restart: always
     network_mode: "host"
+    command: ["//Alice", "--pool-id", "1000000"]
     environment:
       RUST_LOG: 'warn,proof_engine=info'
