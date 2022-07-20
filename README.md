@@ -25,38 +25,27 @@ docker compose up -d
 3. [IPFS](https://ipfs.io): Distributed storage (API available at http://localhost:8001)
 6. [Proof Engine](https://github.com/functionland/proof-engine): Proof of Storage validator for the chain.
 
-## Useful docker compose commands
+## Adding an file to the IPFS service running inside Docker
 
-```bash
-# Update latest tagged images
-$ docker compose pull
-# Stop the images
-$ docker compose down
-# Remove any persistent storage
-$ sudo rm -r data/ ipfs/
-```
-
-## Running IPFS outside of docker compose (Optional)
-
-By default, the IPFS WebUI is disabled on private swarm networks since it fetches the app from the public network. There is a workaround by installing IPFS Desktop.
-
-- Install and Start [IPFS Desktop](https://docs.ipfs.io/install/ipfs-desktop)
-
-- Disconnect from the public network: `ipfs bootstrap rm --all`
-
-- Copy the `swarm.key` from the `fula-testnet repository` to your IPFS Folder. The folder can be opened by clicking `IFPS tray icon > Advanced > Open Repository Directory`.
-
-- Add the private swarm node: `ipfs bootstrap add /dns4/ipfs.testnet.fx.land/tcp/4001/ipfs/12D3KooWBNonCBdf689W94wbBhvm39LGeoP5FZDNNh8j8qwy5M3B`
-
-- Restart IPFS Desktop by clicking `IPFS tray icon > Restart`
-
-- Comment the `ipfs` service secion in the `docker-compose.yaml` file.
-
-- Start the services after excluding IPFS.
+- Copy the file that you want to add to the IPFS docker container
 
 ```
-docker compose up -d
+docker cp examples/meet_box.jpg fula-testnet-ipfs-1:/
 ```
+
+- Add the file to IPFS by running `ipfs add`
+
+```
+docker exec fula-testnet-ipfs-1 ipfs add /meet_box.jpg
+```
+
+- The console should have a similar output showing the progress, the CID and the file added.
+
+```
+84.88 KiB / 84.88 KiB  100.00%added QmcwQBzZcFVa7gyEQazd9WryzXKVMK2TvwBweruBZhy3pf meet_box.jpg
+```
+
+- Keep the CID for the next section. In this case the CID is `QmcwQBzZcFVa7gyEQazd9WryzXKVMK2TvwBweruBZhy3pf`.
 
 ## Proof Engine
 
@@ -86,18 +75,18 @@ The IPFS Account Key in this case is `5HDndLhyKjfxSZHb9zz88pPN3RPmBpaaz8PFbgmKQZ
 1. `seed`: The operator that is owner of the asset pool (Default: `//Alice`)
 2. `from`: The account key of the owner of the asset pool (Default: `5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY` which represents `//Alice`)
 3. `to:`: The IPFS Account key that contains the IPFS file stored. (In this example is `5HDndLhyKjfxSZHb9zz88pPN3RPmBpaaz8PFbgmKQZz5LJ7j` which is your own IFPS Account)
-4. `manifest`.`job`.`uri`: The CID of a file that is stored in the IPFS Account used in the `to` field.
+4. `manifest`.`job`.`uri`: The CID of a file that is stored in the IPFS Account used in the `to` field (In this example the CID is `QmcwQBzZcFVa7gyEQazd9WryzXKVMK2TvwBweruBZhy3pf` from the file that we added above)
 
 ```json
 {
     "seed": "//Alice",
     "from": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
-    "to": "(IPFS ACCOUNT KEY)",
+    "to": "5HDndLhyKjfxSZHb9zz88pPN3RPmBpaaz8PFbgmKQZz5LJ7j",
     "manifest": {
         "job": {
             "work": "Storage",
             "engine": "IPFS",
-            "uri": "(CID OF A FILE STORED IN YOUR IPFS NODE)"
+            "uri": "QmcwQBzZcFVa7gyEQazd9WryzXKVMK2TvwBweruBZhy3pf"
         }
     }
 }
@@ -106,3 +95,40 @@ The IPFS Account Key in this case is `5HDndLhyKjfxSZHb9zz88pPN3RPmBpaaz8PFbgmKQZ
 - After the manifest is added to the chain you should see in the testnet explorer at https://explorer.testnet.fx.land/#/explorer that the IFPS Storage account is getting rewards.
 
 - Another way is to check the logs of the proof engine service with `docker compose logs proof-engine logs` in the same folder as the `fula-testnet` repository, be aware that this will show the rewards being minted if the `to` field is your own IPFS Account Key that was created for your ipfs service.
+
+## Useful docker compose commands
+
+```bash
+# Update latest tagged images
+$ docker compose pull
+# Stop the images
+$ docker compose down
+# Remove any persistent storage
+$ sudo rm -r data/ ipfs/
+```
+
+## Running IPFS outside of docker compose (Optional)
+
+By default, the IPFS WebUI is disabled on private swarm networks since it fetches the app from the public network. There is a workaround by installing IPFS Desktop.
+
+- Install and Start [IPFS Desktop](https://docs.ipfs.io/install/ipfs-desktop)
+
+- Disconnect from the public network: 
+
+```
+ipfs bootstrap rm --all
+```
+
+- Copy the `swarm.key` from the `fula-testnet repository` to your IPFS Folder. The folder can be opened by clicking `IFPS tray icon > Advanced > Open Repository Directory`.
+
+- Add the private swarm node: `ipfs bootstrap add /dns4/ipfs.testnet.fx.land/tcp/4001/ipfs/12D3KooWBNonCBdf689W94wbBhvm39LGeoP5FZDNNh8j8qwy5M3B`
+
+- Restart IPFS Desktop by clicking `IPFS tray icon > Restart`
+
+- Comment the `ipfs` service secion in the `docker-compose.yaml` file.
+
+- Start the services after excluding IPFS.
+
+```
+docker compose up -d
+```
