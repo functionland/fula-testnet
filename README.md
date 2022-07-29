@@ -1,19 +1,25 @@
 # Fula Testnet
 
-## Software requirements
+## Requirements
+
+- A linux host OS for running docker (linux is required for 'host' network mode)
 
 - Install [Docker](https://docs.docker.com/engine/install)
 
 - Install [Docker Compose](https://docs.docker.com/compose/install)
 
-## Usage
+
+
+## Running
 
 - Clone the repository with the configuration
+
 ```
 git clone https://github.com/functionland/fula-testnet.git
 ```
 
 - Run with docker compose
+
 ```
 docker compose up -d
 ```
@@ -24,19 +30,25 @@ docker compose up -d
 2. [Sugarfunge API](https://github.com/functionland/sugarfunge-api/tree/functionland/fula): Blockchain API (API available at http://localhost:4000)
 3. [IPFS](https://ipfs.io): Distributed storage (API available at http://localhost:8001)
 6. [Proof Engine](https://github.com/functionland/proof-engine): Proof of Storage validator for the chain.
+7. [Box App](https://github.com/functionland/fula/tree/main/apps/box): The server API that is used by Fotos
+8. [IPFS Cluster](https://ipfscluster.io/): Used as a proxy between the Box app and IPFS for logging the CID when a file is uploaded with Fotos
 
-## Adding an file to the IPFS service running inside Docker
+## Steps
+
+After performing the following steps you wil have uploaded a file to your node and get rewarded on the Fula testnet for storing the file.
+
+### Add a file to the IPFS service running inside Docker
 
 - Copy the file that you want to add to the IPFS docker container
 
 ```
-docker cp examples/meet_box.jpg fula-testnet-ipfs-1:/
+docker cp examples/meet_box.jpg ipfs:/
 ```
 
 - Add the file to IPFS by running `ipfs add`
 
 ```
-docker exec fula-testnet-ipfs-1 ipfs add /meet_box.jpg
+docker exec ipfs ipfs add /meet_box.jpg
 ```
 
 - The console should have a similar output showing the progress, the CID and the file added.
@@ -47,11 +59,10 @@ docker exec fula-testnet-ipfs-1 ipfs add /meet_box.jpg
 
 - Keep the CID for the next section. In this case the CID is `QmcwQBzZcFVa7gyEQazd9WryzXKVMK2TvwBweruBZhy3pf`.
 
-## Proof Engine
 
-### Initial setup
+### Find your Account ID
 
-- Wait a few minutes after the `docker-compose.yaml` starts the services so it can configure everything for you and get the account key by running the following command on the same folder as the `docker-compose.yaml`.
+- Wait a few minutes after the `docker-compose.yaml` starts the services so it can configure everything for you and get the account ID by running the following command on the same folder as the `docker-compose.yaml`.
 
 ```bash
 docker compose logs proof-engine | grep Account 
@@ -66,16 +77,16 @@ The console should output logs similar to these
 2022-07-20T00:35:06.847604Z  WARN proof_engine::sugarfunge: registering: Account("5HDndLhyKjfxSZHb9zz88pPN3RPmBpaaz8PFbgmKQZz5LJ7j")
 ```
 
-The IPFS Account Key in this case is `5HDndLhyKjfxSZHb9zz88pPN3RPmBpaaz8PFbgmKQZz5LJ7j`.
+The Account ID in this case is `5HDndLhyKjfxSZHb9zz88pPN3RPmBpaaz8PFbgmKQZz5LJ7j`.
 
-### Manifest
+### Upload a Manifest
 
 - A manifest is required to confirm to the proof engine that a file was stored in your IPFS storage. You will need to do a `POST` request to `http://localhost:4000/fula/update_manifest`.
 
 1. `seed`: The operator that is owner of the asset pool (Default: `//Alice`)
-2. `from`: The account key of the owner of the asset pool (Default: `5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY` which represents `//Alice`)
-3. `to:`: The IPFS Account key that contains the IPFS file stored. (In this example is `5HDndLhyKjfxSZHb9zz88pPN3RPmBpaaz8PFbgmKQZz5LJ7j` which is your own IFPS Account)
-4. `manifest`.`job`.`uri`: The CID of a file that is stored in the IPFS Account used in the `to` field (In this example the CID is `QmcwQBzZcFVa7gyEQazd9WryzXKVMK2TvwBweruBZhy3pf` from the file that we added above)
+2. `from`: The account ID of the owner of the asset pool (Default: `5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY` which represents `//Alice`)
+3. `to:`: The account ID that contains the IPFS file stored. (In this example it is `5HDndLhyKjfxSZHb9zz88pPN3RPmBpaaz8PFbgmKQZz5LJ7j` which is your own account)
+4. `manifest`.`job`.`uri`: The CID of a file that is stored in the account used in the `to` field (In this example the CID is `QmcwQBzZcFVa7gyEQazd9WryzXKVMK2TvwBweruBZhy3pf` from the file that we added above)
 
 ```json
 {
@@ -92,9 +103,40 @@ The IPFS Account Key in this case is `5HDndLhyKjfxSZHb9zz88pPN3RPmBpaaz8PFbgmKQZ
 }
 ```
 
-- After the manifest is added to the chain you should see in the testnet explorer at https://explorer.testnet.fx.land/#/explorer that the IFPS Storage account is getting rewards.
+### Restart the proof engine
+
+In order for the proof engine to pick up the new manifest it must be restarted.
+
+```
+$ docker-compose restart proof-engine
+```
+
+
+### View rewards in the testnet explorer
+
+- After the manifest is added to the chain you should see it in the testnet explorer at https://explorer.testnet.fx.land/#/explorer that the IFPS Storage account is getting rewards.
 
 - Another way is to check the logs of the proof engine service with `docker compose logs proof-engine logs` in the same folder as the `fula-testnet` repository, be aware that this will show the rewards being minted if the `to` field is your own IPFS Account Key that was created for your ipfs service.
+
+## Fula Integration Notes
+
+### Find the CID for files uploaded via the Fula File API
+
+If you are not adding files directly to IPFS as  mentioned in the previous steps (eg/ using the Fotos mobile app), you will need to find the CID for the file that was added through the Fula File API.  You can use the IPFS Cluster proxy for this.
+
+```
+$ docker-compose logs -f cluster |  grep 'new pin added:'
+```
+
+### Ensure the file you added is part of IPFS MFS
+
+In order for the proof engine to verify your file is being stored by  IPFS it must be part of the IPFS mutable file system.
+
+```
+$ docker exec ipfs ipfs files cp /ipfs/QmcwQBzZcFVa7gyEQazd9WryzXKVMK2TvwBweruBZhy3pf /
+```
+
+Where `QmcwQBzZcFVa7gyEQazd9WryzXKVMK2TvwBweruBZhy3pf` is the CID you captured in the previous step.
 
 ## Useful docker compose commands
 
@@ -132,3 +174,4 @@ ipfs bootstrap rm --all
 ```
 docker compose up -d
 ```
+
