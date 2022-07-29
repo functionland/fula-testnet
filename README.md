@@ -164,6 +164,8 @@ $ docker exec ipfs ipfs files cp /ipfs/QmcwQBzZcFVa7gyEQazd9WryzXKVMK2TvwBweruBZ
 
 Where `QmcwQBzZcFVa7gyEQazd9WryzXKVMK2TvwBweruBZhy3pf` is the CID you captured in the previous step.
 
+
+
 ## Useful docker-compose commands
 
 ```bash
@@ -201,3 +203,67 @@ ipfs bootstrap rm --all
 docker-compose up -d
 ```
 
+
+## Getting Box multiaddress / Peer ID
+
+Depending on the client you are using you may need to supply either the Box's Peer ID or the Box's multiaddress.
+
+
+### Generate the logs
+
+Run the following commands in this directory.
+
+```
+ > docker-compose logs -f box
+```
+
+The log should contain something like this:
+
+```
+box0      | 2022-07-14T15:31:09.133Z box:info Box peerID 12D3KooWMNV3ANQq5NE94ArVJDRd6rCk53hUTbVuhqQfrNGF54HH
+box0      | 2022-07-14T15:31:09.134Z box:info Box Listen On /dns4/wrtc-star1.par.dwebops.pub/tcp/443/wss/p2p-webrtc-star/p2p/12D3KooWMNV3ANQq5NE94ArVJDRd6rCk53hUTbVuhqQfrNGF54HH
+box0      | 2022-07-14T15:31:09.135Z box:info Box Listen On /dns4/wrtc-star2.sjc.dwebops.pub/tcp/443/wss/p2p-webrtc-star/p2p/12D3KooWMNV3ANQq5NE94ArVJDRd6rCk53hUTbVuhqQfrNGF54HH
+box0      | 2022-07-14T15:31:09.135Z box:info Box Listen On /ip4/127.0.0.1/tcp/4002/p2p/12D3KooWMNV3ANQq5NE94ArVJDRd6rCk53hUTbVuhqQfrNGF54HH
+box0      | 2022-07-14T15:31:09.135Z box:info Box Listen On /ip4/192.168.65.3/tcp/4002/p2p/12D3KooWMNV3ANQq5NE94ArVJDRd6rCk53hUTbVuhqQfrNGF54HH
+box0      | 2022-07-14T15:31:09.135Z box:info Box Listen On /ip4/192.168.65.4/tcp/4002/p2p/12D3KooWMNV3ANQq5NE94ArVJDRd6rCk53hUTbVuhqQfrNGF54HH
+box0      | 2022-07-14T15:31:09.135Z box:info Box Listen On /ip4/172.19.0.1/tcp/4002/p2p/12D3KooWMNV3ANQq5NE94ArVJDRd6rCk53hUTbVuhqQfrNGF54HH
+box0      | 2022-07-14T15:31:09.135Z box:info Box Listen On /ip4/127.0.0.1/tcp/4003/ws/p2p/12D3KooWMNV3ANQq5NE94ArVJDRd6rCk53hUTbVuhqQfrNGF54HH
+box0      | 2022-07-14T15:31:09.135Z box:info Box Listen On /ip4/192.168.65.3/tcp/4003/ws/p2p/12D3KooWMNV3ANQq5NE94ArVJDRd6rCk53hUTbVuhqQfrNGF54HH
+box0      | 2022-07-14T15:31:09.135Z box:info Box Listen On /ip4/192.168.65.4/tcp/4003/ws/p2p/12D3KooWMNV3ANQq5NE94ArVJDRd6rCk53hUTbVuhqQfrNGF54HH
+box0      | 2022-07-14T15:31:09.135Z box:info Box Listen On /ip4/172.19.0.1/tcp/4003/ws/p2p/12D3KooWMNV3ANQq5NE94ArVJDRd6rCk53hUTbVuhqQfrNGF54HH
+```
+
+In this example, the Peer ID is `12D3KooWMNV3ANQq5NE94ArVJDRd6rCk53hUTbVuhqQfrNGF54HH` and the multiaddress is the one reachable from your client on the same network.
+
+Depending on the client support you can use either the TCP and websockets transport multiaddresses:
+
+```
+/ip4/192.168.65.4/tcp/4002/p2p/12D3KooWMNV3ANQq5NE94ArVJDRd6rCk53hUTbVuhqQfrNGF54HH
+/ip4/192.168.65.4/tcp/4003/ws/p2p/12D3KooWMNV3ANQq5NE94ArVJDRd6rCk53hUTbVuhqQfrNGF54HH
+```
+
+### Modify the multiaddress so that it is reachable from your client
+
+Because the Box is running inside Docker, the network interface that the container sees is a different subnet than your host machine and is therefore probably not reachable from outside the container.  
+
+As a result, the multiaddress that the Box reports is also not reachable.
+
+To work around this, change the IP portion of the multiaddress to the IP address of your host machine.
+
+For example, on macOS do the following to obtain your ipv4 address: 
+
+Click the 'network' icon -> network preferences and your wifi or ethernet connection should list your network IP address. (eg/ 192.168.4.42)
+
+Next update the multiaddress in the Box server log from the previous step.
+
+Change:
+
+```
+/ip4/127.0.0.1/tcp/4003/ws/p2p/12D3KooWMNV3ANQq5NE94ArVJDRd6rCk53hUTbVuhqQfrNGF54HH
+```
+
+To:
+
+```
+/ip4/192.168.4.42/tcp/4003/ws/p2p/12D3KooWMNV3ANQq5NE94ArVJDRd6rCk53hUTbVuhqQfrNGF54HH
+```
