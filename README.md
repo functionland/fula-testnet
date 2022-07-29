@@ -156,6 +156,15 @@ If you are not adding files directly to IPFS as  mentioned in the previous steps
 $ docker-compose logs -f cluster |  grep 'new pin added:'
 ```
 
+The output should look something like:
+
+```
+cluster         | 2022-07-29T21:12:21.934Z      INFO    crdt    crdt/consensus.go:231   new pin added: QmfW6ii1KRmr2iei5cpxu3ekojFP5zbtPB8BavcV5SF7MK
+cluster         | 2022-07-29T21:12:21.968Z      INFO    crdt    crdt/consensus.go:231   new pin added: QmYjqgWSaJLJ2iF2CshVTFfBM3da7mtsZymyo69fZepzYo
+```
+
+Where in this case the last uploaded file would correspond with a CID of `QmYjqgWSaJLJ2iF2CshVTFfBM3da7mtsZymyo69fZepzYo`.
+
 ### Ensure the file you added is part of IPFS MFS
 
 In order for the proof engine to verify your file is being stored by  IPFS it must be part of the IPFS mutable file system.
