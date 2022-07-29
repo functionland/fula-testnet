@@ -137,13 +137,12 @@ proof-engine_1  |         "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
 proof-engine_1  |     ),
 proof-engine_1  | }
 ```
-Where `5HDndLhyKjfxSZHb9zz88pPN3RPmBpaaz8PFbgmKQZz5LJ7j` is your account (as acquired in the previous steps).
+
+Where `5HDndLhyKjfxSZHb9zz88pPN3RPmBpaaz8PFbgmKQZz5LJ7j` is your account ID (as acquired in the previous step).
 
 ### View rewards in the testnet explorer
 
-- After the manifest is added to the chain you should see it in the testnet explorer at https://explorer.testnet.fx.land/#/explorer that the IFPS Storage account is getting rewards.
-
-- Another way is to check the logs of the proof engine service with `docker-compose logs proof-engine logs` in the same folder as the `fula-testnet` repository, be aware that this will show the rewards being minted if the `to` field is your own IPFS Account Key that was created for your ipfs service.
+After the manifest is added to the chain you should see it in the testnet explorer at https://explorer.testnet.fx.land/#/explorer and the account ID (as acuiqred in the previous step) is getting rewarded.
 
 ## Fula Integration Notes
 
