@@ -111,6 +111,33 @@ In order for the proof engine to pick up the new manifest it must be restarted.
 $ docker-compose restart proof-engine
 ```
 
+## Viewing your rewards
+
+There are two options for seeing your rewards for storing a file.
+
+### Mint output from proof engine logs
+
+
+```
+proof-engine_1  | 2022-07-29T18:36:37.851570Z  INFO proof_engine::sugarfunge: MintOutput {
+proof-engine_1  |     to: Account(
+proof-engine_1  |         "5HDndLhyKjfxSZHb9zz88pPN3RPmBpaaz8PFbgmKQZz5LJ7j",
+proof-engine_1  |     ),
+proof-engine_1  |     class_id: ClassId(
+proof-engine_1  |         1000000,
+proof-engine_1  |     ),
+proof-engine_1  |     asset_id: AssetId(
+proof-engine_1  |         13510586523404404513,
+proof-engine_1  |     ),
+proof-engine_1  |     amount: Balance(
+proof-engine_1  |         590768,
+proof-engine_1  |     ),
+proof-engine_1  |     who: Account(
+proof-engine_1  |         "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+proof-engine_1  |     ),
+proof-engine_1  | }
+```
+Where `5HDndLhyKjfxSZHb9zz88pPN3RPmBpaaz8PFbgmKQZz5LJ7j` is your account (as acquired in the previous steps).
 
 ### View rewards in the testnet explorer
 
