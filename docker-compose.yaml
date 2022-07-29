@@ -38,13 +38,13 @@ services:
     restart: unless-stopped
     depends_on:
       - ipfs
-      - cluster0
+      - cluster
     volumes:
       - ./data/box:/opt/apps/box/data
     environment:
       DEBUG: "box:*"
       NODE_ENV: "production"
-      FULA_CLUSTER_PROXY: "http://cluster0:9095"
+      FULA_CLUSTER_PROXY: "http://cluster:9095"
       FULA_IPFS_HTTP: "http://ipfs:5001"
     ports:
       - "4002:4002"
@@ -55,7 +55,7 @@ services:
     depends_on:
       - ipfs
     environment:
-      CLUSTER_PEERNAME: cluster0
+      CLUSTER_PEERNAME: cluster
       CLUSTER_SECRET: ${CLUSTER_SECRET} # From shell variable if set
       CLUSTER_IPFSHTTP_NODEMULTIADDRESS: /dns4/ipfs/tcp/5001
       CLUSTER_IPFSPROXY_LISTENMULTIADDRESS: /ip4/0.0.0.0/tcp/9095
@@ -68,4 +68,4 @@ services:
       - "127.0.0.1:9094:9094"
       - "9095:9095"
     volumes:
-      - ./data/cluster0:/data/ipfs-cluster
+      - ./data/cluster:/data/ipfs-cluster
