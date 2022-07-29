@@ -8,7 +8,9 @@
 
 - Install [Docker Compose](https://docs.docker.com/compose/install)
 
+## Before you start
 
+All of the software included in the Fula testnet environment is in 'alpha' status and should be run behind a firewall that restricts all incoming traffic.
 
 ## Running
 
