@@ -33,9 +33,9 @@ docker-compose up -d
 7. [Box App](https://github.com/functionland/fula/tree/main/apps/box): The server API that is used by Fotos
 8. [IPFS Cluster](https://ipfscluster.io/): Used as a proxy between the Box app and IPFS for logging the CID when a file is uploaded with Fotos
 
-## Steps
+## Storage Provider Steps
 
-After performing the following steps you wil have uploaded a file to your node and get rewarded on the Fula testnet for storing the file.
+After performing the following steps you will have uploaded a file to your node and received rewards on the Fula testnet for storing the file.
 
 ### Add a file to the IPFS service running inside Docker
 
