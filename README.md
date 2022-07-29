@@ -18,13 +18,13 @@
 git clone https://github.com/functionland/fula-testnet.git
 ```
 
-- Run with docker compose
+- Run with docker-compose
 
 ```
-docker compose up -d
+docker-compose up -d
 ```
 
-- The following services will be available after docker compose is running
+- The following services will be available after everything is running
 
 1. [Sugarfunge Node](https://github.com/functionland/sugarfunge-node/tree/functionland/fula): Local blockchain node (Accessible at `ws://localhost:9944`) 
 2. [Sugarfunge API](https://github.com/functionland/sugarfunge-api/tree/functionland/fula): Blockchain API (API available at http://localhost:4000)
@@ -65,7 +65,7 @@ docker exec ipfs ipfs add /meet_box.jpg
 - Wait a few minutes after the `docker-compose.yaml` starts the services so it can configure everything for you and get the account ID by running the following command on the same folder as the `docker-compose.yaml`.
 
 ```bash
-docker compose logs proof-engine | grep Account 
+docker-compose logs proof-engine | grep Account 
 ```
 
 The console should output logs similar to these
@@ -143,7 +143,7 @@ Where `5HDndLhyKjfxSZHb9zz88pPN3RPmBpaaz8PFbgmKQZz5LJ7j` is your account (as acq
 
 - After the manifest is added to the chain you should see it in the testnet explorer at https://explorer.testnet.fx.land/#/explorer that the IFPS Storage account is getting rewards.
 
-- Another way is to check the logs of the proof engine service with `docker compose logs proof-engine logs` in the same folder as the `fula-testnet` repository, be aware that this will show the rewards being minted if the `to` field is your own IPFS Account Key that was created for your ipfs service.
+- Another way is to check the logs of the proof engine service with `docker-compose logs proof-engine logs` in the same folder as the `fula-testnet` repository, be aware that this will show the rewards being minted if the `to` field is your own IPFS Account Key that was created for your ipfs service.
 
 ## Fula Integration Notes
 
@@ -165,18 +165,18 @@ $ docker exec ipfs ipfs files cp /ipfs/QmcwQBzZcFVa7gyEQazd9WryzXKVMK2TvwBweruBZ
 
 Where `QmcwQBzZcFVa7gyEQazd9WryzXKVMK2TvwBweruBZhy3pf` is the CID you captured in the previous step.
 
-## Useful docker compose commands
+## Useful docker-compose commands
 
 ```bash
 # Update latest tagged images
-$ docker compose pull
+$ docker-compose pull
 # Stop the images
-$ docker compose down
+$ docker-compose down
 # Remove any persistent storage
 $ sudo rm -r data/ ipfs/
 ```
 
-## Running IPFS outside of docker compose (Optional)
+## Running IPFS outside of docker-compose (Optional)
 
 By default, the IPFS WebUI is disabled on private swarm networks since it fetches the app from the public network. There is a workaround by installing IPFS Desktop.
 
@@ -199,6 +199,6 @@ ipfs bootstrap rm --all
 - Start the services after excluding IPFS.
 
 ```
-docker compose up -d
+docker-compose up -d
 ```
 
