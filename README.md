@@ -117,8 +117,15 @@ $ docker-compose restart proof-engine
 
 There are two options for seeing your rewards for storing a file.
 
-### Mint output from proof engine logs
+### See mint output from proof engine logs
 
+Tail the proof engine logs:
+
+```
+$ docker-compose logs -f proof-engine
+```
+
+Here is sample output you should see once your provider account is rewarded on the blockchain.
 
 ```
 proof-engine_1  | 2022-07-29T18:36:37.851570Z  INFO proof_engine::sugarfunge: MintOutput {
@@ -140,7 +147,9 @@ proof-engine_1  |     ),
 proof-engine_1  | }
 ```
 
-Where `5HDndLhyKjfxSZHb9zz88pPN3RPmBpaaz8PFbgmKQZz5LJ7j` is your account ID (as acquired in the previous step).
+- `5HDndLhyKjfxSZHb9zz88pPN3RPmBpaaz8PFbgmKQZz5LJ7j` is your account ID (as acquired in the previous step).
+
+- `590768` is your current $FULA balance for receiving storage rewards.
 
 ### View rewards in the testnet explorer
 
@@ -155,6 +164,15 @@ If you are not adding files directly to IPFS as  mentioned in the previous steps
 ```
 $ docker-compose logs -f cluster |  grep 'new pin added:'
 ```
+
+The output should look something like:
+
+```
+cluster         | 2022-07-29T21:12:21.934Z      INFO    crdt    crdt/consensus.go:231   new pin added: QmfW6ii1KRmr2iei5cpxu3ekojFP5zbtPB8BavcV5SF7MK
+cluster         | 2022-07-29T21:12:21.968Z      INFO    crdt    crdt/consensus.go:231   new pin added: QmYjqgWSaJLJ2iF2CshVTFfBM3da7mtsZymyo69fZepzYo
+```
+
+Where in this case the last uploaded file would correspond with a CID of `QmYjqgWSaJLJ2iF2CshVTFfBM3da7mtsZymyo69fZepzYo`.
 
 ### Ensure the file you added is part of IPFS MFS
 
@@ -237,7 +255,7 @@ box0      | 2022-07-14T15:31:09.135Z box:info Box Listen On /ip4/172.19.0.1/tcp/
 
 In this example, the Peer ID is `12D3KooWMNV3ANQq5NE94ArVJDRd6rCk53hUTbVuhqQfrNGF54HH` and the multiaddress is the one reachable from your client on the same network.
 
-Depending on the client support you can use either the TCP and websockets transport multiaddresses:
+Depending on the client support you can use either the TCP or the websockets transport multiaddresses:
 
 ```
 /ip4/192.168.65.4/tcp/4002/p2p/12D3KooWMNV3ANQq5NE94ArVJDRd6rCk53hUTbVuhqQfrNGF54HH
