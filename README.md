@@ -32,8 +32,8 @@ docker-compose up -d
 2. [Sugarfunge API](https://github.com/functionland/sugarfunge-api/tree/functionland/fula): Blockchain API (API available at http://localhost:4000)
 3. [IPFS](https://ipfs.io): Distributed storage (API available at http://localhost:8001)
 6. [Proof Engine](https://github.com/functionland/proof-engine): Proof of Storage validator for the chain.
-7. [Box App](https://github.com/functionland/fula/tree/main/apps/box): The server API that is used by Fotos
-8. [IPFS Cluster](https://ipfscluster.io/): Used as a proxy between the Box app and IPFS for logging the CID when a file is uploaded with Fotos
+7. [Fula API Server](https://github.com/functionland/fula/tree/main/apps/box): The server API that is used by Fotos
+8. [IPFS Cluster](https://ipfscluster.io/): Used as a proxy between the Fula API server app and IPFS for logging the CID when a file is uploaded with Fotos
 
 ## Storage Provider Steps
 
@@ -224,9 +224,9 @@ docker-compose up -d
 ```
 
 
-## Getting Box multiaddress / Peer ID
+## Getting Fula API Server multiaddress / Peer ID
 
-Depending on the client you are using you may need to supply either the Box's Peer ID or the Box's multiaddress.
+Depending on the client you are using you may need to supply either the Fula API server's Peer ID or the Fula API server's multiaddress.
 
 
 ### Generate the logs
@@ -264,9 +264,9 @@ Depending on the client support you can use either the TCP or the websockets tra
 
 ### Modify the multiaddress so that it is reachable from your client
 
-Because the Box is running inside Docker, the network interface that the container sees is a different subnet than your host machine and is therefore probably not reachable from outside the container.  
+Because the Fula API server is running inside Docker, the network interface that the container sees is a different subnet than your host machine and is therefore probably not reachable from outside the container.  
 
-As a result, the multiaddress that the Box reports is also not reachable.
+As a result, the multiaddress that the Fula API server reports is also not reachable.
 
 To work around this, change the IP portion of the multiaddress to the IP address of your host machine.
 
@@ -274,7 +274,7 @@ For example, on macOS do the following to obtain your ipv4 address:
 
 Click the 'network' icon -> network preferences and your wifi or ethernet connection should list your network IP address. (eg/ 192.168.4.42)
 
-Next update the multiaddress in the Box server log from the previous step.
+Next update the multiaddress in the Fula API server log from the previous step.
 
 Change:
 
