@@ -44,13 +44,13 @@ After performing the following steps you will have uploaded a file to your node 
 - Copy the file that you want to add to the IPFS docker container
 
 ```
-docker cp examples/meet_box.jpg ipfs:/
+docker-compose cp examples/meet_box.jpg ipfs:/
 ```
 
 - Add the file to IPFS by running `ipfs add`
 
 ```
-docker exec ipfs ipfs add /meet_box.jpg
+docker-compose exec ipfs ipfs add /meet_box.jpg
 ```
 
 - The console should have a similar output showing the progress, the CID and the file added.
